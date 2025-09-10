@@ -14,9 +14,3 @@ A modern, responsive website for Trust Nest – Residential Construction Solutio
 - Quick contact buttons (Call, WhatsApp)
 - Dark/light theme toggle
 
-## Getting Started
-
-1. Clone the repository:
-   ```powershell
-   git clone https://github.com/AKB-cmd/trustnest.git
-   

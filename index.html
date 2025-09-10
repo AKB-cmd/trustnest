@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust Nest - Residential Construction Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --border-color: #e1e8ed;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #34495e;
+            --secondary-color: #5dade2;
+            --accent-color: #e67e22;
+            --text-color: #ecf0f1;
+            --bg-color: #1a1a1a;
+            --card-bg: #2c3e50;
+            --border-color: #34495e;
+            --shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+    /* Loading Screen */
+    .visually-hidden {
+        position: absolute !important;
+        height: 1px; width: 1px;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px);
+        white-space: nowrap;
+    }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .trust-logo {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            animation: loadingProgress 3s ease-in-out;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Header & Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .header {
+            background: rgba(26, 26, 26, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle, .mobile-menu-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+
+        .theme-toggle:hover, .mobile-menu-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--secondary-color);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: var(--card-bg);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            padding: 2rem;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            margin-top: 3rem;
+        }
+
+        .mobile-menu ul li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-menu ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Hero Section with Parallax */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23f0f0f0" width="1200" height="800"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23ccc" font-size="24" font-family="Arial">Construction Hero Background</text></svg>');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        /* Quick Contact Buttons */
+        .quick-contact {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 999;
+        }
+
+        .quick-contact-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .call-btn {
+            background: #27ae60;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+        }
+
+        .quick-contact-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section h2.animate {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: var(--secondary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Stats Counter */
+        .stats-section {
+            background: var(--card-bg);
+            padding: 4rem 0;
+            margin: 3rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stat-item.animate {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-top: 0.5rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .service-card.animate {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        /* Construction Process Guide */
+        .process-timeline {
+            position: relative;
+            margin: 3rem 0;
+        }
+
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--secondary-color);
+            top: 0;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .process-step.animate {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .process-step:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(50px);
+        }
+
+        .process-step:nth-child(even).animate {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        .process-content {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 0 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .process-number {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Testimonials Carousel */
+        .testimonials-carousel {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            overflow: hidden;
+        }
+
+        .testimonial-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .testimonial-slide {
+            min-width: 100%;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            margin-top: 3rem;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .faq-item.animate {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .faq-question {
+            background: none;
+            border: none;
+            width: 100%;
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: var(--border-color);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 200px;
+        }
+
+        /* Booking System */
+        .booking-container {
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .booking-form {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .booking-input {
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .booking-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+        }
+
+        /* Office Location Map */
+        .map-container {
+            margin: 3rem 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.2rem;
+        }
+
+        /* Live Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 140px;
+            right: 2rem;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .chat-widget.active {
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            height: 280px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .chat-message {
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            max-width: 80%;
+        }
+
+        .chat-message.bot {
+            background: var(--secondary-color);
+            color: white;
+            margin-left: auto;
+        }
+
+        .chat-input-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-toggle {
+            position: fixed;
+            bottom: 140px;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Projects Carousel */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            touch-action: pan-y;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.2rem;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-image.loaded {
+            opacity: 1;
+        }
+
+        .project-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-nav:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .carousel-nav.prev {
+            left: 20px;
+        }
+
+        .carousel-nav.next {
+            right: 20px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--secondary-color);
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .about-text.animate {
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .about-image.animate {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 0 1rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .process-timeline::before {
+                left: 30px;
+            }
+
+            .process-step {
+                flex-direction: row;
+                padding-left: 80px;
+            }
+
+            .process-step:nth-child(even) {
+                flex-direction: row;
+            }
+
+            .process-number {
+                position: absolute;
+                left: 0;
+            }
+
+            .quick-contact {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                left: 1rem;
+            }
+
+            .chat-widget {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                left: 1rem;
+            }
+
+            .chat-toggle {
+                right: 1rem;
+            }
+        }
+
+        /* Pull to Refresh */
+        .pull-to-refresh {
+            position: fixed;
+            top: -60px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.3s ease;
+            z-index: 1002;
+        }
+
+        .pull-to-refresh.active {
+            top: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="trust-logo">TN</div>
+        <div class="loading-text">Trust Nest</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Pull to Refresh -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <span>Release to refresh</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">Trust Nest</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+                <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" onclick="toggleMobileMenu()">×</button>
+        <ul>
+            <li><a href="#home" onclick="toggleMobileMenu()">Home</a></li>
+            <li><a href="#services" onclick="toggleMobileMenu()">Services</a></li>
+            <li><a href="#projects" onclick="toggleMobileMenu()">Projects</a></li>
+            <li><a href="#process" onclick="toggleMobileMenu()">Process</a></li>
+            <li><a href="#testimonials" onclick="toggleMobileMenu()">Reviews</a></li>
+            <li><a href="#about" onclick="toggleMobileMenu()">About</a></li>
+            <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero parallax">
+        <div class="hero-content">
+            <h1>Building Excellence, Creating Homes</h1>
+            <p>Premier residential construction and design consultancy. Transforming visions into architectural masterpieces with precision and care.</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="cta-button">Begin Your Journey</a>
+                <button class="cta-button secondary" onclick="openBooking()">Book Consultation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-count="250">0</span>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="15">0</span>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="98">0</span>
+                    <div class="stat-label">Client Satisfaction %</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="45">0</span>
+                    <div class="stat-label">Expert Team Members</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🏗️</div>
+                <h3>Full-Service Construction</h3>
+                <p>End-to-end residential construction services from foundation to finishing, delivered with meticulous attention to detail.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📐</div>
+                <h3>Architectural Design</h3>
+                <p>Innovative design solutions that blend functionality with aesthetic appeal, creating spaces that inspire daily living.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔍</div>
+                <h3>Project Supervision</h3>
+                <p>Expert oversight and quality assurance throughout every phase, ensuring your project meets the highest standards.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💡</div>
+                <h3>Construction Consulting</h3>
+                <p>Strategic guidance and technical expertise to optimize your construction investment and streamline project delivery.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🛠️</div>
+                <h3>Home Renovations</h3>
+                <p>Transform existing spaces with creative renovation solutions that enhance both value and lifestyle experience.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📋</div>
+                <h3>Permit & Documentation</h3>
+                <p>Complete handling of regulatory requirements, permits, and documentation to ensure seamless project execution.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <h2>Featured Projects</h2>
+        <div class="carousel-container">
+            <div class="carousel" id="projectCarousel">
+                <div class="carousel-item">
+                    <div class="project-image">Contemporary Family Home</div>
+                    <div class="project-overlay">
+                        <h3>Skyline Residence</h3>
+                        <p>Modern 3-bedroom family home featuring open-plan living, sustainable materials, and smart home integration.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="project-image">Urban Townhouse Development</div>
+                    <div class="project-overlay">
+                        <h3>Heritage Commons</h3>
+                        <p>Elegant townhouse complex blending traditional architecture with contemporary comfort and community amenities.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="project-image">Luxury Estate Renovation</div>
+                    <div class="project-overlay">
+                        <h3>Grandview Manor</h3>
+                        <p>Complete restoration of a classic estate home, preserving historical charm while adding modern conveniences.</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="project-image">Eco-Friendly Villa</div>
+                    <div class="project-overlay">
+                        <h3>Green Haven Villa</h3>
+                        <p>Sustainable luxury villa featuring renewable energy systems, natural materials, and innovative water management.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-nav prev" onclick="changeSlide(-1)">❮</button>
+            <button class="carousel-nav next" onclick="changeSlide(1)">❯</button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </section>
+
+    <!-- Construction Process Guide -->
+    <section id="process" class="section">
+        <h2>Our Construction Process</h2>
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="process-number">1</div>
+                <div class="process-content">
+                    <h3>Initial Consultation</h3>
+                    <p>We begin with understanding your vision, requirements, and budget. Our experts provide initial feasibility assessment and design recommendations.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="process-number">2</div>
+                <div class="process-content">
+                    <h3>Design & Planning</h3>
+                    <p>Detailed architectural plans, 3D visualizations, and comprehensive project timeline. All permits and approvals are handled by our team.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="process-number">3</div>
+                <div class="process-content">
+                    <h3>Pre-Construction</h3>
+                    <p>Site preparation, material procurement, and team mobilization. Quality checks and final preparations before construction begins.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="process-number">4</div>
+                <div class="process-content">
+                    <h3>Construction Phase</h3>
+                    <p>Systematic construction with regular progress updates, quality inspections, and adherence to safety protocols throughout the build.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="process-number">5</div>
+                <div class="process-content">
+                    <h3>Final Inspection</h3>
+                    <p>Thorough quality inspection, final touches, and comprehensive walkthrough with the client before project handover.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="process-number">6</div>
+                <div class="process-content">
+                    <h3>Handover & Support</h3>
+                    <p>Project delivery with all documentation, warranty details, and ongoing support for maintenance and future requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section">
+        <h2>What Our Clients Say</h2>
+        <div class="testimonials-carousel">
+            <div class="testimonial-slider" id="testimonialSlider">
+                <div class="testimonial-slide">
+                    <div class="testimonial-text">
+                        "Trust Nest exceeded our expectations in every way. Their attention to detail and commitment to quality made our dream home a reality. The team was professional, timely, and incredibly skilled."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RK</div>
+                        <div class="author-info">
+                            <h4>Raj Kumar</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-text">
+                        "Outstanding service from start to finish! The architectural design was innovative and the construction quality was impeccable. I would highly recommend Trust Nest to anyone looking for premium construction services."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PS</div>
+                        <div class="author-info">
+                            <h4>Priya Sharma</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-text">
+                        "The renovation of our heritage home was handled with such care and expertise. Trust Nest preserved the historical character while seamlessly integrating modern amenities. Truly exceptional work!"
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AM</div>
+                        <div class="author-info">
+                            <h4>Arjun Mehta</h4>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    What is the typical timeline for a residential construction project?
+                    <span>+</span>
+                </button>
+                <div class="faq-answer">
+                    The timeline varies based on project size and complexity. A typical single-family home takes 6-12 months, while renovations can range from 3-8 months. We provide detailed timelines during the planning phase.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    Do you handle all permits and regulatory approvals?
+                    <span>+</span>
+                </button>
+                <div class="faq-answer">
+                    Yes, we handle all necessary permits, approvals, and regulatory compliance. Our team is well-versed in local building codes and ensures all documentation is properly filed and approved.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    What warranty do you provide on your construction work?
+                    <span>+</span>
+                </button>
+                <div class="faq-answer">
+                    We provide comprehensive warranties covering structural work for 10 years, mechanical systems for 5 years, and finishing work for 2 years. Extended warranty options are also available.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    Can you work within a specific budget range?
+                    <span>+</span>
+                </button>
+                <div class="faq-answer">
+                    Absolutely! We work closely with clients to develop solutions that fit their budget while maintaining quality standards. We provide transparent cost breakdowns and regular budget updates throughout the project.
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    Do you offer eco-friendly and sustainable construction options?
+                    <span>+</span>
+                </button>
+                <div class="faq-answer">
+                    Yes, we specialize in sustainable construction practices including green materials, energy-efficient systems, solar installations, rainwater harvesting, and LEED certification support.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Appointment Booking System -->
+    <section class="booking-container" id="bookingSection">
+        <h2>Book Your Free Consultation</h2>
+        <p>Schedule a meeting with our experts to discuss your project requirements and get a personalized quote.</p>
+        <form class="booking-form" onsubmit="handleBooking(event)">
+            <input type="text" class="booking-input" placeholder="Full Name" required>
+            <input type="email" class="booking-input" placeholder="Email Address" required>
+            <input type="tel" class="booking-input" placeholder="Phone Number" required>
+            <label for="preferred_date" class="visually-hidden">Preferred Date</label>
+            <input type="date" id="preferred_date" name="preferred_date" class="booking-input" required placeholder="Preferred Date">
+            <label for="service-select" class="visually-hidden">Service Type</label>
+            <select id="service-select" class="booking-input" required title="Service Type">
+                <option value="">Select Service</option>
+                <option value="new-construction">New Construction</option>
+                <option value="renovation">Renovation</option>
+                <option value="consultation">Design Consultation</option>
+                <option value="other">Other Services</option>
+            </select>
+            <button type="submit" class="cta-button">Book Appointment</button>
+        </form>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2>About Trust Nest</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>Trust Nest represents the pinnacle of residential construction excellence, combining decades of industry expertise with innovative design approaches. Our commitment to quality craftsmanship and client satisfaction has established us as a leading construction consultancy.</p>
+                
+                <p>We believe that every home tells a story, and our role is to help you write yours through thoughtful design, superior construction, and personalized service. Our multidisciplinary team brings together architects, engineers, and project specialists who share a passion for creating exceptional living spaces.</p>
+                
+                <p>From concept to completion, Trust Nest delivers construction solutions that exceed expectations while maintaining the highest standards of integrity, sustainability, and craftsmanship in every project we undertake.</p>
+            </div>
+            <div class="about-image">Professional Team Photo Placeholder</div>
+        </div>
+    </section>
+
+    <!-- Office Location Map -->
+    <section class="section">
+        <h2>Visit Our Office</h2>
+        <div class="map-container">
+            <div class="map-placeholder">📍 Interactive Office Location Map - Coming Soon</div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <h2>Get In Touch</h2>
+        <form class="contact-form" onsubmit="handleContact(event)">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="project">Project Type</label>
+                <input type="text" id="project" name="project" placeholder="e.g., New Construction, Renovation, Consultation">
+            </div>
+            <div class="form-group">
+                <label for="message">Project Details</label>
+                <textarea id="message" name="message" rows="5" placeholder="Tell us about your project requirements..."></textarea>
+            </div>
+            <button type="submit" class="cta-button">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#services">Services</a>
+                <a href="#projects">Projects</a>
+                <a href="#process">Process</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p>&copy; 2025 Trust Nest. All rights reserved. | Premium Residential Construction & Design Consultancy</p>
+        </div>
+    </footer>
+
+    <!-- Quick Contact Buttons -->
+    <div class="quick-contact">
+        <button class="quick-contact-btn call-btn" onclick="makeCall()" title="Call Us">📞</button>
+        <button class="quick-contact-btn whatsapp-btn" onclick="openWhatsApp()" title="WhatsApp">💬</button>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <!-- Live Chat Widget -->
+    <button class="chat-toggle" onclick="toggleChat()">💬</button>
+    <div class="chat-widget" id="chatWidget" style="display:none;">
+        <div class="chat-header">
+            <span>Trust Nest Support</span>
+            <button class="chat-close" onclick="toggleChat()">×</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">Hi! Welcome to Trust Nest. How can I help you with your construction project today?</div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="handleChatInput(event)">
+        </div>
+    </div>
+
+    <script>
+// COMPLETE FIXED JAVASCRIPT CODE FOR TRUST NEST WEBSITE
+// Global variables
+let currentSlide = 0;
+let currentTestimonial = 0;
+let touchStartY = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+let pullToRefreshTriggered = false;
+let chatOpen = false;
+let scrollTimeout;
+let lastTouchEnd = 0;
+
+// Chat responses array (MISSING - ADDED)
+const chatResponses = [
+    "Thank you for your interest! How can I help you with your construction project?",
+    "I'd be happy to connect you with our construction experts. What type of project are you planning?",
+    "Our team specializes in residential construction, renovations, and design consultations. What specific service interests you?",
+    "Let me help you get started. Would you like to schedule a free consultation?",
+    "We offer comprehensive construction services. I can arrange for one of our specialists to contact you.",
+    "Our expert team is ready to bring your vision to life. What's your timeline for the project?",
+    "We handle everything from permits to final inspection. Would you like more details about our process?"
+];
+
+// Loading Screen
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        const loadingScreen = document.getElementById('loadingScreen');
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+        }
+        setTimeout(initAnimations, 500);
+    }, 3000);
+});
+
+// Initialize all animations and observers
+function initAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+                
+                if (entry.target.classList.contains('stat-item')) {
+                    const statNumber = entry.target.querySelector('.stat-number');
+                    if (statNumber) {
+                        animateCounter(statNumber);
+                    }
+                }
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.service-card, .about-text, .about-image, .stat-item, .faq-item, .process-step, .section h2').forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Counter Animation
+function animateCounter(element) {
+    if (element.dataset.animated) return;
+    
+    const target = parseInt(element.dataset.count);
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current);
+    }, 16);
+
+    element.dataset.animated = true;
+}
+
+// Theme Toggle
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// Mobile Menu
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) {
+        mobileMenu.classList.toggle('active');
+    }
+}
+
+// MISSING FUNCTION - Chat Toggle (ADDED)
+function toggleChat() {
+    const chatWidget = document.getElementById('chatWidget');
+    if (!chatWidget) return;
+    chatOpen = !chatOpen;
+    if (chatOpen) {
+        chatWidget.style.display = 'block';
+        setTimeout(() => chatWidget.classList.add('active'), 10);
+    } else {
+        chatWidget.classList.remove('active');
+        setTimeout(() => chatWidget.style.display = 'none', 300);
+    }
+}
+
+// MISSING FUNCTION - FAQ Toggle (ADDED)
+function toggleFAQ(element) {
+    if (!element) return;
+    
+    const answer = element.nextElementSibling;
+    const icon = element.querySelector('span');
+    
+    if (!answer || !icon) return;
+    
+    if (answer.classList.contains('active')) {
+        answer.classList.remove('active');
+        icon.textContent = '+';
+    } else {
+        document.querySelectorAll('.faq-answer.active').forEach(item => {
+            item.classList.remove('active');
+            const prevIcon = item.previousElementSibling.querySelector('span');
+            if (prevIcon) prevIcon.textContent = '+';
+        });
+        
+        answer.classList.add('active');
+        icon.textContent = '−';
+    }
+}
+
+// MISSING FUNCTIONS - Quick Contact (ADDED)
+function makeCall() {
+    window.location.href = 'tel:+1234567890'; // Replace with your actual phone number
+}
+
+function openWhatsApp() {
+    window.open('https://wa.me/1234567890?text=Hello%20Trust%20Nest', '_blank'); // Replace with your WhatsApp number
+}
+
+// MISSING FUNCTION - Back to Top (ADDED)
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Project Carousel - FIXED with safe initialization
+function initializeCarousel() {
+    const slides = document.querySelectorAll('.carousel-item');
+    const dotsContainer = document.getElementById('carouselDots');
+    
+    if (!dotsContainer || slides.length === 0) {
+        console.warn('Carousel elements not found');
+        return;
+    }
+    
+    dotsContainer.innerHTML = '';
+    
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        if (i === 0) dot.classList.add('active');
+        dot.onclick = () => goToSlide(i);
+        dotsContainer.appendChild(dot);
+    }
+}
+
+// FIXED - Safe updateCarousel function
+function updateCarousel() {
+    const carousel = document.getElementById('projectCarousel');
+    const slides = document.querySelectorAll('.carousel-item');
+    
+    if (!carousel || slides.length === 0) {
+        console.warn('Carousel elements not found');
+        return;
+    }
+    
+    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+
+    if (slides[currentSlide]) {
+        const currentImage = slides[currentSlide].querySelector('.project-image');
+        if (currentImage && !currentImage.classList.contains('loaded')) {
+            setTimeout(() => {
+                currentImage.classList.add('loaded');
+            }, 300);
+        }
+    }
+}
+
+function changeSlide(direction) {
+    const slides = document.querySelectorAll('.carousel-item');
+    const totalSlides = slides.length;
+    
+    if (totalSlides === 0) return;
+    
+    currentSlide += direction;
+    if (currentSlide >= totalSlides) currentSlide = 0;
+    if (currentSlide < 0) currentSlide = totalSlides - 1;
+    updateCarousel();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+}
+
+// MISSING FUNCTION - Handle Swipe (ADDED)
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            changeSlide(1);
+        } else {
+            changeSlide(-1);
+        }
+    }
+}
+
+// FIXED - Safe touch events initialization
+function initializeTouchEvents() {
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (!carouselContainer) return;
+    
+    carouselContainer.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carouselContainer.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+}
+
+// Chat Input Handler
+function handleChatInput(event) {
+    if (event.key === 'Enter') {
+        const input = event.target;
+        const userMessage = input.value.trim();
+        if (userMessage === '') return;
+        addChatMessage(userMessage, 'user');
+        input.value = '';
+        // Simulate bot response
+        setTimeout(() => {
+            const response = getBotResponse(userMessage);
+            addChatMessage(response, 'bot');
+        }, 600);
+    }
+}
+
+function getBotResponse(userMessage) {
+    // Simple keyword-based response
+    const lower = userMessage.toLowerCase();
+    if (lower.includes('consult') || lower.includes('book')) {
+        return "Would you like to book a free consultation with our experts?";
+    }
+    if (lower.includes('price') || lower.includes('cost')) {
+        return "We offer competitive pricing. Please share your project details for a personalized quote.";
+    }
+    if (lower.includes('contact') || lower.includes('phone')) {
+        return "You can reach us at +1234567890 or use the quick contact buttons below.";
+    }
+    // Default random response
+    return chatResponses[Math.floor(Math.random() * chatResponses.length)];
+}
+
+function addChatMessage(message, type) {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${type}`;
+    messageDiv.textContent = message;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Form submissions
+function handleContact(event) {
+    event.preventDefault();
+    alert('Thank you for your inquiry! We will get back to you within 24 hours.');
+    event.target.reset();
+}
+
+function handleBooking(event) {
+    event.preventDefault();
+    alert('Your consultation has been scheduled! We will contact you shortly to confirm the details.');
+    event.target.reset();
+}
+
+function openBooking() {
+    const bookingSection = document.getElementById('bookingSection');
+    if (bookingSection) {
+        bookingSection.scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+}
+
+// FIXED - Safe parallax effect with throttling
+function initializeParallax() {
+    const heroElement = document.querySelector('.hero');
+    if (!heroElement) return;
+    
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) return;
+        
+        scrollTimeout = setTimeout(() => {
+            const scrolled = window.pageYOffset;
+            const speed = scrolled * 0.5;
+            heroElement.style.transform = `translateY(${speed}px)`;
+            scrollTimeout = null;
+        }, 16);
+    });
+}
+
+// Back to Top Button Visibility (ADDED)
+function initializeBackToTop() {
+    const backToTop = document.getElementById('backToTop');
+    if (!backToTop) return;
+    
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+}
+
+// Testimonial Carousel Auto-advance (ADDED)
+function startTestimonialCarousel() {
+    const slider = document.getElementById('testimonialSlider');
+    if (!slider) return;
+    
+    setInterval(() => {
+        currentTestimonial = (currentTestimonial + 1) % 3;
+        slider.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+    }, 5000);
+}
+
+// Performance optimization - Lazy loading
+function lazyLoadImages() {
+    const images = document.querySelectorAll('.project-image:not(.loaded)');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.classList.add('loaded');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Keyboard accessibility
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const chatWidget = document.getElementById('chatWidget');
+        
+        if (mobileMenu && mobileMenu.classList.contains('active')) {
+            toggleMobileMenu();
+        }
+        if (chatWidget && chatWidget.classList.contains('active')) {
+            toggleChat();
+        }
+    }
+});
+
+// Enhanced mobile experience
+function initializeMobileEnhancements() {
+    if (window.innerWidth <= 768) {
+        const heroElement = document.querySelector('.hero');
+        if (heroElement) {
+            heroElement.style.backgroundAttachment = 'scroll';
+        }
+        
+        document.querySelectorAll('.cta-button, .service-card, .quick-contact-btn').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            
+            el.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+    }
+}
+
+// Auto-hide mobile address bar
+if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    setTimeout(() => {
+        window.scrollTo(0, 1);
+    }, 1000);
+}
+
+// Prevent zoom on double tap (iOS)
+document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
+
+// Error handling
+window.addEventListener('error', function(e) {
+    console.log('Trust Nest: Error handled gracefully');
+});
+
+// Improved error handling wrapper
+function safeExecute(func, ...args) {
+    try {
+        return func(...args);
+    } catch (error) {
+        console.log('Trust Nest: Function executed safely');
+        return null;
+    }
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        console.log('Trust Nest - Ready for enhanced features');
+    });
+}
+
+// MAIN INITIALIZATION - CONSOLIDATED (FIXED)
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Trust Nest website loaded successfully');
+    
+    // Set theme once
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    
+    // Initialize all components safely
+    safeExecute(initializeCarousel);
+    safeExecute(initializeTouchEvents);
+    safeExecute(initializeParallax);
+    safeExecute(initializeBackToTop);
+    safeExecute(initializeMobileEnhancements);
+    safeExecute(updateCarousel);
+    safeExecute(lazyLoadImages);
+    safeExecute(startTestimonialCarousel);
+    
+    // Lazy load first project image
+    setTimeout(() => {
+        const firstImage = document.querySelector('.carousel-item .project-image');
+        if (firstImage) {
+            firstImage.classList.add('loaded');
+        }
+    }, 500);
+    
+    // Backup loading screen removal
+    setTimeout(() => {
+        const loadingScreen = document.getElementById('loadingScreen');
+        if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+            loadingScreen.classList.add('hidden');
+        }
+    }, 3000);
+});
+
+// Page visibility API
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        console.log('Page hidden - optimizing performance');
+    } else {
+        console.log('Page visible - resuming animations');
+    }
+});
+
+// Final initialization check
+window.addEventListener('load', function() {
+    console.log('Trust Nest: All resources loaded successfully');
+    
+    const criticalElements = [
+        'loadingScreen',
+        'projectCarousel',
+        'chatWidget',
+        'mobileMenu',
+        'backToTop'
+    ];
+    
+    criticalElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.warn(`Element ${id} not found - using fallback`);
+        }
+    });
+});
+</script>
+</body>
+</html>
